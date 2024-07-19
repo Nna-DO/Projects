@@ -1,4 +1,4 @@
-These are screenshots and steps taken to create CI/CD pipeline using Github Actions on an AWS EC2 self-hosted runners.
+These are screenshots and steps taken to create CI/CD pipeline using GitHub Actions on an AWS EC2 self-hosted runners.
 
 Step 1. Go to the GitHub repository settings , select “Runners” under “Actions” and click on the New self-hosted runner. Select Linux (using the AWS Ubuntu image)
 
