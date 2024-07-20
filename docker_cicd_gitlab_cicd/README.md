@@ -39,7 +39,7 @@ Step 8: Exit the GitLab page to reveal the Assigned Runner.
 
 Step 9: Create a “.gitlab-ci.yml” file and define your pipeline job. It is assumed that you already have the Source Code and dependencies in the project folder in GitLab. If you don’t go ahead and create each one – that is if you didn’t do a “git clone” to push to the GitLab repo. 
 
-![S9a](https://github.com/user-attachments/assets/c732ca8c-59d2-45de-8a13-ff05fc03fa4e)
+![S9](https://github.com/user-attachments/assets/38a715ab-3d43-4e1d-8261-7b68a93e4fe8)
 
 ![S9a](https://github.com/user-attachments/assets/6dd3a72d-ea8f-4446-be1a-731f5119ad01)
 
