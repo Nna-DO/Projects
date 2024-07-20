@@ -1,32 +1,26 @@
-# notes-wiki
+These are screenshots and steps taken to create CI/CD pipeline using GitHub Actions on an AWS EC2 self-hosted runners.
 
-[![License](https://img.shields.io/badge/license-MIT-_red.svg)](https://opensource.org/licenses/MIT)
+Step 1. Go to the GitHub repository settings , select “Runners” under “Actions” and click on the New self-hosted runner. Select Linux (using the AWS Ubuntu image)
 
-Simple web app written in Golang save my notes
+![image](https://github.com/user-attachments/assets/c07f695f-2aad-447a-8f38-88fd786e65b8)
 
-## medium article
-I have added a medium [article](https://medium.com/@phil16terpasetheo/build-a-ci-cd-pipeline-using-github-actions-on-an-aws-ec2-self-hosted-runners-1abf30078e71) on how to Build a CI/CD Pipeline using Github Actions on an AWS EC2 self hosted runners. 
+Step 2. Create and AWS EC2 instance using Ubuntu Image.
 
-## Usage
+![image](https://github.com/user-attachments/assets/8b06c706-9dc2-43a0-881e-f6a9cb5bf6f7)
 
-Clone this repo and go to that folder:
+Step 3: Update your Docker secrets in your secret section of github to be able to access the docker image. 
 
-```bash
-go run main.go
-```
+![image](https://github.com/user-attachments/assets/5d4fdb66-1c59-4b3c-ae82-402f4b7fcafe)
 
-Default service run on port 8080
-[http://localhost:8080](http://localhost:8080)
+Step 4: Follow prompt from the Runner webpage and proceed to run them in the now running EC2 instance. Make sure you install Docker on the EC2 instance.
+![image](https://github.com/user-attachments/assets/591825a0-5822-4caf-859c-524454192c5a)
 
-## Feature
+![image](https://github.com/user-attachments/assets/2b2c97bd-8b90-4819-94d2-10979aaaf01b)
 
-- All notes are saved as .txt file in the "notes" folder
-- List all notes
-- Save a note
-- View a note
-- Edit a note
+Step 5: Trigger the build by running the ./run.sh on the EC2 instance, open the actions on the github and observe the process. 
 
-## License
+![image](https://github.com/user-attachments/assets/a3a71278-81ff-4f07-97cb-e79de911f60f)
 
-This repo is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).  
-You are welcome to contribute!
+Note: Once the completed the EC2 will show the “Job Docker completed with result: succeeded” to show that the build was successful.
+
+![image](https://github.com/user-attachments/assets/a2f5b8f7-0b2a-4b9e-a2e0-b37ab11dad9b)
