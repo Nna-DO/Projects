@@ -1,1 +1,1 @@
-These are DevOps projects done with screenshots of every step added to each project folder README.md
+These are DevOps projects, each with screenshots of every step added to the project's README.md file.
