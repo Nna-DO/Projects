@@ -1,151 +1,70 @@
-# BootStrap K8s with ArgoCD
+These are screenshots of steps taken to bootstrap EKS cluster with ArgoCD using terraform.
+
+Step 1: Create and Instance, ssh into the said instance, perform updates, install necessary tools such as Helm, Terraform, Git, Docker. Verify they exist in the instance.
+![image](https://github.com/user-attachments/assets/97d1322c-6c39-4352-b112-94bc1c9bd3c3)
 
 
-## Table of Contents
+Step 2: make a directory called “Project”, perform a “git init”, clone the repository with the code, git fetch your own repository, remove all unwanted folders (we are interested in the argocd folder), mv the folder to your own folder. 
+Note: These steps can be found in the screenshots below.
+![image](https://github.com/user-attachments/assets/7cea2398-06aa-4a6d-9905-92a1c98d5927)
 
-1. [Introduction](#introduction)
-2. [Clone the Repository](#clone-the-repository)
-3. [Provision EKS Cluster](#provision-eks-cluster)
-    - [Initialize Terraform](#initialize-terraform)
-    - [Plan Terraform](#Plan-terraform)
-    - [Apply Terraform Configuration](#apply-terraform-configuration)
-4. [Update EKS Configuration](#update-eks-configuration)
-5. [Apply Manifest Files](#apply-manifest-files)
-6. [Bootstrapping with ArgoCD](#bootstrapping-with-argocd)
-    - [Add a Namespace for ArgoCD](#add-a-namespace-for-argocd)
-    - [Install ArgoCD](#install-argocd)
-    - [Confirm ArgoCD Pods](#confirm-argocd-pods)
-    - [Map Port for ArgoCD Access](#map-port-for-argocd-access)
-    - [Retrieve ArgoCD Admin Password](#retrieve-argocd-admin-password)
-    - [Log in to ArgoCD](#log-in-to-argocd)
-    - [Connect GitHub Repository to ArgoCD](#connect-github-repository-to-argocd)
-    - [Add Your Cluster to ArgoCD](#add-your-cluster-to-argocd)
-    - [Create and Sync Your Application](#create-and-sync-your-application)
-7. [Conclusion](#conclusion)
-
-### Introduction
-In this article, we will learn how to bootstrap our Kubernetes cluster with ArgoCD. To achieve this, we need a running cluster which can either be EKS, GKS, or AKS, our manifest files which are inside our GitHub repository, and an ArgoCD account.
+![image](https://github.com/user-attachments/assets/bab48c60-5525-4d1c-a1d7-cb0cbcb3c246)
 
 
-### Clone the repository
+Step 3: Cd into argocd>terraform and run a “terraform init, terraform plan and terraform apply” to create the EKS cluster with all its resources.
+![image](https://github.com/user-attachments/assets/ac09f23b-4246-4bf9-985c-b0c0ee65ec3e)
 
-```sh
-git clone https://github.com/Victoria-OA/manifests.git
-```
+![image](https://github.com/user-attachments/assets/df7549a5-a735-4583-90a8-7608000c349e)
 
-cd into the eks folder which contains the Terraform files to provision your cluster on AWS:
+![image](https://github.com/user-attachments/assets/816e51cd-43e5-4896-87e4-388bb2575e08)
 
-```sh
-terraform init
-terraform plan
-terraform apply
-```
+![image](https://github.com/user-attachments/assets/d7e1215e-b117-45a8-a81f-0014f4394d40)
 
-### Update EKS Configuration
 
-After our EKS configuration has been successfully applied to AWS, update it using the following command so our manifest files can be applied to the cluster:
+Step 4: Change the NodePort to LoadBalancer in the app.yaml file
+![image](https://github.com/user-attachments/assets/f76b4f20-2397-46d9-9d4d-e930b71b8060)
 
-```sh
-aws eks --region <region> update-kubeconfig --name <cluster-name>
-```
+![image](https://github.com/user-attachments/assets/1550d67b-f1fa-43c6-aef1-3adfedffc864)
 
-### Apply Manifest Files
+Step 5: Run a kubectl apply, then check for svc, pods etc as shown below.
+![image](https://github.com/user-attachments/assets/6b0ba572-54fb-4e65-a909-e7c4d60f0ccf)
 
-After updating your cluster to receive manifests configuration, apply the files in the manifest folder with:
+![image](https://github.com/user-attachments/assets/4042e5fe-0d9d-4491-a559-9fab7be85438)
 
-```sh
-kubectl apply -f app.yaml
-```
+Step 6: Do a portforward as shown, 
+a.	Check if it is working with localhost:8080 on your browser
+![image](https://github.com/user-attachments/assets/ad077113-2920-40df-b652-f470f2ae2b4d)
 
-### Bootstrapping with ArgoCD
+b.	“open a new terminal as the handling connection is prompting so you don’t kill it and run the argocd get secret a password.
+c.	open another terminal and run the  “argocd login localhost:8080” and follow prompt as shown.
+![image](https://github.com/user-attachments/assets/8448afce-b742-4104-9a04-d388b7b2e064)
 
-Once your manifest files have been applied, the next step is to bootstrap them to ArgoCD to enhance continuous delivery. Follow these steps:
+![image](https://github.com/user-attachments/assets/0477ba1d-43d6-4002-abf9-aec0fc4f59b4)
 
-1. **Add a namespace for ArgoCD:**
 
-    ```sh
-    kubectl create namespace argocd
-    ```
+Step 7: Get the context  do an argocd cluster add, argocd repo add.
+![image](https://github.com/user-attachments/assets/7e2cfef7-bb33-446d-90f1-0bccfbf086e0)
 
-2. **Install ArgoCD:**
+Step 8: Edit below to create and sync your application.
+argocd app create appname \
+   --repo https://github.com/username/repourl \
+   --path argocd \
+   --dest-server https://kubernetes.default.svc \
+   --dest-namespace argocd
 
-    ```sh
-    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-    ```
+![image](https://github.com/user-attachments/assets/ef1217fe-56e7-4874-a984-de6eb8004462)
 
-3. **Confirm ArgoCD Pods:**
+Step 9: Sync your application with “ argocd app sync <app name>”
+![image](https://github.com/user-attachments/assets/6862f598-8dbc-4d11-97e2-9501e8b7a64f)
 
-    After installation, wait for a while for the pods to be ready and confirm it using:
+a.	If it is successful it will display like this.
+![image](https://github.com/user-attachments/assets/0133d716-e120-42e5-8db5-87eb01a36870)
 
-    ```sh
-    kubectl get pods -n argocd
-    ```
 
-4. **Map Port for ArgoCD Access:**
+Step 10: Once the sync is successful, you can log in to your ArgoCD via the browser to check it out.
+![image](https://github.com/user-attachments/assets/9074adb7-ec3b-4366-843e-8cc03d0a3999)
 
-    When the pods are ready, map your port to access ArgoCD in the browser:
+Note: Don’t forget to destroy every resource created by terraform with a “terraform destroy –auto-approve”
 
-    ```sh
-    kubectl port-forward svc/argocd-server -n argocd 8080:443
-    ```
 
-5. **Retrieve ArgoCD Admin Password:**
 
-    Upon access, you will be required to log in with a username and a password. The username is `admin`, and the password can be retrieved using the following command:
-
-    ```sh
-    kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
-    ```
-
-6. **Log in to ArgoCD:**
-
-    When the password has been retrieved, log in to ArgoCD with:
-
-    ```sh
-    argocd login localhost:8080
-    ```
-
-7. **Connect GitHub Repository to ArgoCD:**
-
-    Once logged in successfully, connect the GitHub repo that contains the manifest with the following command:
-
-    ```sh
-    argocd repo add https://github.com/username/repourl --username <your-github-username> --password <your-personal-access-token>
-    ```
-
-    Note: To get your GitHub password, use your GitHub token, which can be generated in developer’s settings.
-
-8. **Add Your Cluster to ArgoCD:**
-
-    Once your repo has been connected successfully, add your cluster to the ArgoCD server using the following command:
-
-    ```sh
-    kubectl config get-contexts
-    argocd cluster add <context-name>
-    ```
-
-9. **Create and Sync Your Application:**
-
-    Once the cluster has been added successfully, proceed to create your app and configure your ArgoCD using:
-
-    ```sh
-    argocd app create appname \
-       --repo https://github.com/username/repourl \
-       --path manifests/ \
-       --dest-server https://kubernetes.default.svc \
-       --dest-namespace argocd
-    ```
-
-10. **Sync Your Application:**
-
-    Finally, sync your app using the following command:
-
-    ```sh
-    argocd app sync newapp
-    ```
-
-Once the sync is successful, you can log in to your ArgoCD via the browser to check it out.
-
-## Conclusion
-
-By following these steps, you have set up a Kubernetes cluster, applied your manifest files, and integrated ArgoCD for continuous delivery. This setup not only streamlines your deployment process but also enhances the manageability and scalability of your applications.
